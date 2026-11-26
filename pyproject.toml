@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "recallconduit"
+version = "0.0.1"
+description = "List Markdown notes in a local Obsidian vault via MCP"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = ["mcp>=1.12,<2"]
+
+[project.urls]
+Repository = "https://github.com/dimitriskl/RecallConduit"
+
+[project.scripts]
+recallconduit = "recallconduit.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/recallconduit"]

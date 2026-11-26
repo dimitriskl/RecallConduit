@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.dimitriskl/recallconduit",
+  "title": "RecallConduit",
+  "description": "List Markdown filenames in a configured local Obsidian vault.",
+  "repository": {
+    "url": "https://github.com/dimitriskl/RecallConduit",
+    "source": "github"
+  },
+  "version": "0.0.1",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "recallconduit",
+      "version": "0.0.1",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "RECALLCONDUIT_VAULT",
+          "description": "Absolute path to the local Obsidian vault",
+          "isRequired": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,19 +1,19 @@
-# Release checklist
+# v0.0.1 release
 
-- Build a functional Python package and verify automated tests on Windows and Linux.
-- Confirm package name availability and create a PyPI account with MFA.
-- Configure a trusted publisher or use an authenticated local upload. Never commit credentials.
-- Build and inspect distributions, tag v0.1.0, and publish matching artifacts after successful tests.
-- Validate an MCP Registry manifest against the current official schema and publish using GitHub namespace authentication.
-- Verify the public package and registry listing.
-- Implement and test any necessary authenticated remote access before submitting integrations to ChatGPT and Claude.
-- Submit a native Obsidian plugin only if required.
+1. Verify the Build and publish workflow passes tests on Windows and Linux and checks both package artifacts.
+2. Sign in to PyPI, enable MFA, and open https://pypi.org/manage/account/publishing/. Add a pending GitHub Trusted Publisher with:
+   - PyPI project name: recallconduit
+   - Owner: dimitriskl
+   - Repository: RecallConduit
+   - Workflow: release.yml
+   - Environment: pypi
+3. In GitHub repository settings, create the pypi environment and restrict deployments to main. Review the source and workflow, then manually run Build and publish on main from GitHub Actions. Push and pull requests only test/build, never publish.
+4. Verify https://pypi.org/project/recallconduit/0.0.1/ and install the released package in a clean environment.
+5. Create the GitHub release/tag v0.0.1 at the tested and published commit.
+6. Install the official mcp-publisher CLI from https://github.com/modelcontextprotocol/registry/releases. From the repository root run:
+   - mcp-publisher login github
+   - mcp-publisher validate server.json
+   - mcp-publisher publish server.json
+7. Verify the official registry entry for io.github.dimitriskl/recallconduit.
 
-Official resources:
-
-- https://docs.pypi.org/trusted-publishers/
-- https://github.com/modelcontextprotocol/registry
-- https://platform.openai.com/
-- https://claude.ai/directory/manage
-
-GitHub ownership and MIT licensing do not grant exclusive trademark rights. Domain purchases and trademark filings require separate owner authorization. Do not upload empty packages solely to reserve names.
+No empty name-reservation packages. This release has a real but deliberately small read-only feature. Future versions must implement note operations and secure remote access before platform directory submissions. A public repository and MIT license do not create exclusive trademark rights.

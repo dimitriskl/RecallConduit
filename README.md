@@ -1,20 +1,41 @@
 # RecallConduit
 
+**Latest change — v0.0.1:** Minimal local MCP server for listing Markdown filenames; packaging and registry metadata prepared. Publication and test status must be verified before use.
+
 **Different minds. One memory.**
 
-RecallConduit is an independent MIT-licensed project to connect AI assistants, including ChatGPT and Claude, to a shared Obsidian knowledge base through the Model Context Protocol (MCP).
+RecallConduit is an independent MIT-licensed project to connect AI assistants to a shared Obsidian knowledge base through MCP.
 
-## Status
+<!-- mcp-name: io.github.dimitriskl/recallconduit -->
 
-Pre-development. The maintainer will implement the Python code. No functional release or external registry listing has been published.
+## v0.0.1 scope
 
-## Planned capabilities
+One read-only tool, `list_notes`, lists up to 100 visible Markdown filenames in the root of the configured vault. No recursion, note content access, search, writes, remote access or approved ChatGPT/Claude integration yet.
 
-- Search and read Markdown notes in a selected vault.
-- Create, update, and append to notes with explicit write permissions.
-- Share saved knowledge across compatible AI assistants.
-- Prevent out-of-vault access and accidental overwrites.
-- Support local MCP first; evaluate authenticated remote access separately.
+## Local installation from source
+
+Python 3.11 or newer:
+
+```sh
+python -m pip install .
+```
+
+Configure a compatible local MCP client with the absolute path to the installed command:
+
+```json
+{
+  "mcpServers": {
+    "recallconduit": {
+      "command": "C:/path/to/venv/Scripts/recallconduit.exe",
+      "env": {
+        "RECALLCONDUIT_VAULT": "C:/path/to/test-vault"
+      }
+    }
+  }
+}
+```
+
+Use a test vault first. Local stdio only; no network listener.
 
 ## Project identifiers
 
@@ -26,11 +47,11 @@ Pre-development. The maintainer will implement the Python code. No functional re
 | Obsidian plugin (if needed) | recall-conduit |
 | ChatGPT / Claude | RecallConduit |
 
-Only the GitHub repository is established. Other identifiers are not registered or approved.
+Registry submissions are pending until successful publication. See [release checklist](docs/release.md).
 
-## Development and release
+## Development
 
-See [milestones](docs/milestones.md) and [release checklist](docs/release.md).
+The maintainer will implement the full functionality, starting with [milestone 1](docs/milestones.md).
 
 ## License
 
