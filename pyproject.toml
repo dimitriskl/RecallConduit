@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "recallconduit"
+version = "0.1.0"
+description = "Local-first MCP access to an Obsidian Markdown vault"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "Dimitris Klis"}]
+dependencies = ["mcp>=1.12,<2"]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10", "build>=1.2", "twine>=6"]
+
+[project.urls]
+Repository = "https://github.com/dimitriskl/RecallConduit"
+
+[project.scripts]
+recallconduit = "recallconduit.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/recallconduit"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

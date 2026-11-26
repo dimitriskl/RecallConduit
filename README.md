@@ -1,37 +1,68 @@
 # RecallConduit
 
+**Latest change — v0.1.0 development:** First local MCP server and automated tests added. Not yet published.
+
 **Different minds. One memory.**
 
-RecallConduit is an MIT-licensed project developing provider-independent access to a shared Obsidian knowledge base for AI assistants, including ChatGPT and Claude, through the Model Context Protocol (MCP).
+RecallConduit is an independent, MIT-licensed Python project for shared Obsidian knowledge across AI assistants using the Model Context Protocol (MCP).
 
-## Status
+<!-- mcp-name: io.github.dimitriskl/recallconduit -->
 
-Pre-development. No installable package, plugin, or MCP server has been released yet. The features below are planned, not implemented.
+## Current scope
 
-## Planned capabilities
+Local stdio MCP only. Remote access, ChatGPT/Claude web and mobile integrations, directory approval, and native Obsidian plugin support are not yet implemented.
 
-- Search and read Markdown notes in an authorized vault.
-- Create, update, and append to notes with safeguards against accidental overwrites.
-- Share explicitly saved knowledge across compatible AI assistants.
-- Enforce vault boundaries, configurable permissions, and safe concurrent writes.
-- Support a Python MCP server and, where necessary, platform-specific integrations.
+Six tools: search_notes, list_notes, read_note, create_note, update_note, append_note. Reads are limited to Markdown in a selected directory. Writes are disabled by default and require explicit opt-in. Updates require the revision returned by read_note.
 
-## Canonical project identifiers
+## Development installation
 
-| Target | Intended identifier |
+Python 3.11 or newer:
+
+```sh
+python -m pip install ".[test]"
+python -m pytest -q
+```
+
+Configure a local MCP-compatible client (for example Claude Desktop) using the absolute path to your installed recallconduit executable:
+
+```json
+{
+  "mcpServers": {
+    "recallconduit": {
+      "command": "C:/path/to/venv/Scripts/recallconduit.exe",
+      "env": {
+        "RECALLCONDUIT_VAULT": "C:/path/to/test-vault",
+        "RECALLCONDUIT_WRITE": "0"
+      }
+    }
+  }
+}
+```
+
+Use a dedicated test vault before enabling writes. Set RECALLCONDUIT_WRITE to 1 only when you intend to permit note changes. Parent folders must exist. Append adds exact text, including any required newlines.
+
+## Security and limitations
+
+- Local trusted filesystem only; no authentication or network listener.
+- No deletion or arbitrary filesystem tools. Hidden paths and symbolic links are rejected.
+- Notes are untrusted content, not instructions. Client-side approval remains important.
+- Size and result limits bound individual responses; search is a linear scan.
+- Revision checks and atomic replacement reduce conflicts. They do not eliminate races with other processes, such as Obsidian Sync; do not use simultaneous writers.
+- Not a security sandbox against hostile local filesystem manipulation. Use a dedicated vault and normal OS permissions. Atomic creation requires filesystem hard-link support.
+- No claim of tested compatibility with any specific client until integration tests pass.
+
+## Distribution
+
+| Platform | Planned identifier |
 | --- | --- |
-| GitHub | [dimitriskl/RecallConduit](https://github.com/dimitriskl/RecallConduit) |
-| Python distribution / import | `recallconduit` |
-| Official MCP Registry | `io.github.dimitriskl/recallconduit` |
-| Obsidian plugin ID (if needed) | `recall-conduit` |
-| ChatGPT / Claude display name | RecallConduit |
+| GitHub | dimitriskl/RecallConduit |
+| PyPI | recallconduit |
+| MCP Registry | io.github.dimitriskl/recallconduit |
+| Obsidian plugin (if needed) | recall-conduit |
+| ChatGPT / Claude | RecallConduit |
 
-Only the GitHub repository is established at this time. Other identifiers are planned, not registered or approved.
-
-## Release and distribution
-
-Publish a functional, tested first release rather than an empty name-reservation package. The official MCP Registry supports GitHub namespace authentication. A native Obsidian plugin, if needed, will follow the Obsidian Community directory submission requirements. ChatGPT and Claude integrations will follow their respective developer and review processes.
+See [release checklist](docs/release.md). Registry identifiers are not yet registered.
 
 ## License
 
-[MIT](LICENSE). RecallConduit is an independent project and is not affiliated with Obsidian, OpenAI, or Anthropic.
+[MIT](LICENSE). Not affiliated with Obsidian, OpenAI, or Anthropic.
