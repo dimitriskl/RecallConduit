@@ -1,0 +1,43 @@
+name: Register MCP and create v0.0.1 release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  register:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 25c04d63aa3a58f2249407972b8091f9ddbaf06d
+          persist-credentials: false
+      - name: Download official MCP publisher
+        run: |
+          curl --fail --show-error --location "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" -o publisher.tar.gz
+          tar xzf publisher.tar.gz mcp-publisher
+      - name: Validate manifest
+        run: ./mcp-publisher validate server.json
+      - name: Authenticate
+        run: ./mcp-publisher login github-oidc
+      - name: Publish MCP server
+        run: ./mcp-publisher publish server.json
+  release:
+    needs: register
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Create release for the published source commit
+        run: |
+          if gh release view v0.0.1 >/dev/null 2>&1; then
+            echo "Release already exists."
+          else
+            gh release create v0.0.1 --target 25c04d63aa3a58f2249407972b8091f9ddbaf06d --title "RecallConduit v0.0.1" --notes "Initial local read-only MCP server: lists Markdown filenames in the configured vault root. Published on PyPI. Note content access, search, editing and remote integrations are not included."
+          fi
